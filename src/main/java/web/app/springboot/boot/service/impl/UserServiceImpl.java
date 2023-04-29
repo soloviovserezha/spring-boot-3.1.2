@@ -3,56 +3,56 @@ package web.app.springboot.boot.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import web.app.springboot.boot.dao.UserDAO;
 import web.app.springboot.boot.model.User;
+import web.app.springboot.boot.repo.UserRepository;
 import web.app.springboot.boot.service.UserService;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    private UserDAO userDAO;
+    private UserRepository userRepository;
 
     @Autowired
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public List<User> getUserList() {
-        return userDAO.getUserList();
+        return userRepository.findAll();
     }
 
     @Override
     public User getUserById(Long id) {
-        return userDAO.getUserById(id);
+        return userRepository.findById(id).orElseThrow();
     }
 
-    @Transactional
     @Override
+    @Transactional
     public User deleteUserById(Long id) {
-        return userDAO.deleteUserById(getUserById(id).getId());
+        userRepository.deleteById(id);
+        return null;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteAllUsers() {
-        userDAO.deleteAllUsers();
+        userRepository.deleteAll();
     }
 
-    @Transactional
     @Override
+    @Transactional
     public User changeUser(User user) {
         user.setName(user.getName());
         user.setSurname(user.getSurname());
         user.setEmail(user.getEmail());
-        return userDAO.changeUser(user);
+        return userRepository.save(user);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void addUser(User user) {
-        userDAO.addUser(user);
+        userRepository.save(user);
     }
 }

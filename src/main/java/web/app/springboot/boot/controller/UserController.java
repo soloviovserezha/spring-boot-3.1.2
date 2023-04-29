@@ -34,7 +34,6 @@ public class UserController {
     @GetMapping("/add")
     public String saveUser(Model model) {
         model.addAttribute("userForm", new User());
-        userService.getUserList();
         return "user-add";
     }
 
